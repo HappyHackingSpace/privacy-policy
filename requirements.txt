@@ -1,0 +1,12 @@
+openai>=1.102.0,<2
+python-dotenv>=1.1.1,<2
+langchain-text-splitters>=0.3.11,<0.4
+selenium>=4.35.0,<5
+chromedriver-autoinstaller>=0.6,<0.7
+requests>=2.32.5,<3
+trafilatura>=2.0.0,<3
+beautifulsoup4>=4.13.5,<5
+tiktoken>=0.11.0,<1
+tenacity>=9.1.2,<10
+diskcache>=5.6.3,<6
+lxml[html_clean]>=5.2,<6
