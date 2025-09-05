@@ -18,7 +18,6 @@ Analyze a website’s privacy policy end-to-end: **auto-discover** the policy UR
     ├─ LICENSE
     └─ src/
        └─ privacy_policy_analyzer/
-          ├─ __init__.py
           ├─ prompts.py
           └─ scoring.py
 
