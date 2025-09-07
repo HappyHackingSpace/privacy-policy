@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import argparse
 import gzip
 import io
@@ -8,21 +6,15 @@ import os
 import pathlib
 import sys
 import xml.etree.ElementTree as ET
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urljoin, urlparse
-
+from src.analyzer.prompts import SYSTEM_SCORER, build_user_prompt
+from src.analyzer.scoring import aggregate_chunk_results
 import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from openai import OpenAI
-
-try:
-    import trafilatura
-    _HAS_TRAFILATURA = True
-except Exception:
-    trafilatura = None
-    _HAS_TRAFILATURA = False
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -36,36 +28,61 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from privacy_policy_analyzer.prompts import SYSTEM_SCORER, build_user_prompt
-from privacy_policy_analyzer.scoring import aggregate_chunk_results
+try:
+    import trafilatura
+
+    _HAS_TRAFILATURA = True
+except Exception:
+    trafilatura = None  # type: ignore[assignment]
+    _HAS_TRAFILATURA = False
+
 
 load_dotenv()
 
 _PRIVACY_CUES = (
-    "privacy", "privacy-policy", "privacy_notice", "privacy-notice",
-    "gizlilik", "gizlilik-politik", "veri koruma",
-    "privacidad", "politica de privacidad",
-    "privacidade", "politica de privacidade",
+    "privacy",
+    "privacy-policy",
+    "privacy_notice",
+    "privacy-notice",
+    "gizlilik",
+    "gizlilik-politik",
+    "veri koruma",
+    "privacidad",
+    "politica de privacidad",
+    "privacidade",
+    "politica de privacidade",
     "datenschutz",
-    "confidentialité", "politique de confidentialité",
-    "informativa privacy", "informativa sulla privacy",
-    "個人情報", "プライバシー", "隐私", "隱私",
+    "confidentialité",
+    "politique de confidentialité",
+    "informativa privacy",
+    "informativa sulla privacy",
+    "個人情報",
+    "プライバシー",
+    "隐私",
+    "隱私",
     "개인정보",
     "privatsphäre",
 )
 
 _COMMON_PATHS = [
-    "/privacy", "/privacy-policy", "/privacy_policy",
-    "/legal/privacy", "/legal/privacy-policy",
+    "/privacy",
+    "/privacy-policy",
+    "/privacy_policy",
+    "/legal/privacy",
+    "/legal/privacy-policy",
     "/policies/privacy",
-    "/en/privacy", "/en/privacy-policy",
-    "/tr/gizlilik", "/tr/gizlilik-politikasi",
+    "/en/privacy",
+    "/en/privacy-policy",
+    "/tr/gizlilik",
+    "/tr/gizlilik-politikasi",
 ]
+
 
 def _is_privacy_like(s: str) -> bool:
     """Heuristic check for privacy-related terms in a string."""
     s = (s or "").lower()
     return any(k in s for k in _PRIVACY_CUES)
+
 
 def _http_get(url: str, timeout: int = 15) -> Optional[requests.Response]:
     """HTTP GET with basic headers and redirects allowed."""
@@ -84,10 +101,12 @@ def _http_get(url: str, timeout: int = 15) -> Optional[requests.Response]:
     except Exception:
         return None
 
+
 def _fetch_text(url: str, timeout: int = 12) -> Optional[str]:
     """Fetch raw text content via GET."""
     r = _http_get(url, timeout=timeout)
     return r.text if r else None
+
 
 def _head_ok(url: str, timeout: int = 8) -> bool:
     """Lightweight existence probe using HEAD; redirects considered OK."""
@@ -110,6 +129,7 @@ def _head_ok(url: str, timeout: int = 8) -> bool:
     except Exception:
         return False
 
+
 def _extract_text_http(url: str) -> Optional[str]:
     if _HAS_TRAFILATURA:
         try:
@@ -125,8 +145,9 @@ def _extract_text_http(url: str) -> Optional[str]:
         return None
     soup = BeautifulSoup(r.text, "html.parser")
     body = soup.find("body")
-    t = (body.get_text("\n").strip() if body else "")
+    t = body.get_text("\n").strip() if body else ""
     return t if len(t) >= 400 else None
+
 
 def fetch_content_with_selenium(url: str) -> Optional[str]:
     """Return visible text using headless Chrome; robust for dynamic pages."""
@@ -144,12 +165,15 @@ def fetch_content_with_selenium(url: str) -> Optional[str]:
     driver = webdriver.Chrome(options=opts)
     try:
         driver.get(url)
-        WebDriverWait(driver, 12).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+        WebDriverWait(driver, 12).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
         return driver.find_element(By.TAG_NAME, "body").get_attribute("innerText")
     except Exception:
         return None
     finally:
         driver.quit()
+
 
 def fetch_policy_text(url: str, prefer: str = "auto") -> Optional[str]:
     """Fetch policy text using HTTP first; fallback to Selenium if needed."""
@@ -161,6 +185,7 @@ def fetch_policy_text(url: str, prefer: str = "auto") -> Optional[str]:
             return None
     return fetch_content_with_selenium(url)
 
+
 def _light_verify(url: str) -> bool:
     """Low-cost check that a URL likely points to a privacy policy page."""
     t = _extract_text_http(url)
@@ -168,6 +193,7 @@ def _light_verify(url: str) -> bool:
         return False
     low = t[:3000].lower()
     return any(k in low for k in _PRIVACY_CUES) and len(t) >= 500
+
 
 def _get_sitemaps_from_robots(base_url: str) -> List[str]:
     """Extract sitemap URLs from robots.txt; also try the default /sitemap.xml."""
@@ -191,6 +217,7 @@ def _get_sitemaps_from_robots(base_url: str) -> List[str]:
             seen.add(u)
             uniq.append(u)
     return uniq
+
 
 def _fetch_sitemap_urls(url: str, max_urls: int = 50) -> List[str]:
     """Return privacy-like URLs found in the sitemap (gz and index supported)."""
@@ -231,6 +258,7 @@ def _fetch_sitemap_urls(url: str, max_urls: int = 50) -> List[str]:
             uniq.append(u)
     return uniq
 
+
 def _discover_candidates_from_html(start_url: str) -> List[str]:
     """Collect privacy-like links from the HTML of the given page."""
     r = _http_get(start_url)
@@ -239,15 +267,16 @@ def _discover_candidates_from_html(start_url: str) -> List[str]:
     soup = BeautifulSoup(r.text, "html.parser")
     links: List[str] = []
     for a in soup.find_all("a", href=True):
-        text = (a.get_text(" ") or "") + " " + a["href"]
+        text = (a.get_text(" ") or "") + " " + a["href"]  # type: ignore[operator, index]
         if _is_privacy_like(text):
-            links.append(urljoin(r.url, a["href"]))
+            links.append(urljoin(r.url, a["href"]))  # type: ignore[index]
     seen, uniq = set(), []
     for u in links:
         if u not in seen:
             seen.add(u)
             uniq.append(u)
     return uniq
+
 
 def _extract_text_quality(url: str) -> Tuple[Optional[str], Optional[str]]:
     """Extract and sanity-check text content for policy-ness."""
@@ -272,6 +301,7 @@ def _extract_text_quality(url: str) -> Tuple[Optional[str], Optional[str]]:
     if len(t) >= 500 and _is_privacy_like(t):
         return t, r.url
     return None, r.url
+
 
 def resolve_privacy_url(input_url: str) -> Tuple[str, Optional[str]]:
     """Resolve a likely privacy policy URL starting from any given page."""
@@ -305,7 +335,10 @@ def resolve_privacy_url(input_url: str) -> Tuple[str, Optional[str]]:
 
     return input_url, None
 
-def split_text_into_chunks(text: str, chunk_size: int = 3500, chunk_overlap: int = 350) -> List[str]:
+
+def split_text_into_chunks(
+    text: str, chunk_size: int = 3500, chunk_overlap: int = 350
+) -> List[str]:
     """Split text into chunks using paragraph-first recursive boundaries."""
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
@@ -313,6 +346,7 @@ def split_text_into_chunks(text: str, chunk_size: int = 3500, chunk_overlap: int
         separators=["\n\n", "\n", ". ", " ", ""],
     )
     return splitter.split_text(text or "")
+
 
 def analyze_chunk_json(text_chunk: str, model: str) -> Optional[Dict[str, Any]]:
     """Analyze a text chunk with the LLM and return one JSON object."""
@@ -332,12 +366,15 @@ def analyze_chunk_json(text_chunk: str, model: str) -> Optional[Dict[str, Any]]:
     )
     content = (resp.choices[0].message.content or "").strip()
     try:
-        return json.loads(content)
+        return json.loads(content)  # type: ignore[no-any-return]
     except Exception:
         return None
 
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Privacy Policy Analyzer (auto-discovery + JSON scoring)")
+    parser = argparse.ArgumentParser(
+        description="Privacy Policy Analyzer (auto-discovery + JSON scoring)"
+    )
     parser.add_argument("--url", type=str, help="Site or policy URL to analyze")
     parser.add_argument(
         "--model",
@@ -345,8 +382,12 @@ def main() -> None:
         default=os.getenv("OPENAI_MODEL", "gpt-4o"),
         help="OpenAI chat model, e.g., gpt-4o",
     )
-    parser.add_argument("--chunk-size", type=int, default=3500, help="Character-based chunk size")
-    parser.add_argument("--chunk-overlap", type=int, default=350, help="Overlap between chunks")
+    parser.add_argument(
+        "--chunk-size", type=int, default=3500, help="Character-based chunk size"
+    )
+    parser.add_argument(
+        "--chunk-overlap", type=int, default=350, help="Overlap between chunks"
+    )
     parser.add_argument(
         "--max-chunks",
         type=int,
@@ -376,26 +417,38 @@ def main() -> None:
     args = parser.parse_args()
     input_url = args.url or input("Enter a site (or privacy policy) URL: ").strip()
 
-    resolved_url, _ = (input_url, None) if args.no_discover else resolve_privacy_url(input_url)
+    resolved_url, _ = (
+        (input_url, None) if args.no_discover else resolve_privacy_url(input_url)
+    )
 
     content = fetch_policy_text(resolved_url, prefer=args.fetch)
     if not content:
-        print(json.dumps({
-            "status": "error",
-            "reason": "fetch_failed",
-            "url": input_url,
-            "resolved_url": resolved_url
-        }))
+        print(
+            json.dumps(
+                {
+                    "status": "error",
+                    "reason": "fetch_failed",
+                    "url": input_url,
+                    "resolved_url": resolved_url,
+                }
+            )
+        )
         return
 
-    chunks = split_text_into_chunks(content, chunk_size=args.chunk_size, chunk_overlap=args.chunk_overlap)
+    chunks = split_text_into_chunks(
+        content, chunk_size=args.chunk_size, chunk_overlap=args.chunk_overlap
+    )
     if not chunks:
-        print(json.dumps({
-            "status": "error",
-            "reason": "no_chunks",
-            "url": input_url,
-            "resolved_url": resolved_url
-        }))
+        print(
+            json.dumps(
+                {
+                    "status": "error",
+                    "reason": "no_chunks",
+                    "url": input_url,
+                    "resolved_url": resolved_url,
+                }
+            )
+        )
         return
 
     if len(chunks) > args.max_chunks:
@@ -412,12 +465,16 @@ def main() -> None:
             results.append(j)
 
     if not results:
-        print(json.dumps({
-            "status": "error",
-            "reason": "no_valid_scores",
-            "url": input_url,
-            "resolved_url": resolved_url
-        }))
+        print(
+            json.dumps(
+                {
+                    "status": "error",
+                    "reason": "no_valid_scores",
+                    "url": input_url,
+                    "resolved_url": resolved_url,
+                }
+            )
+        )
         return
 
     agg = aggregate_chunk_results(results)
@@ -445,6 +502,7 @@ def main() -> None:
         out = {**base, **agg, "chunks": results}
 
     print(json.dumps(out, ensure_ascii=False, indent=2))
+
 
 if __name__ == "__main__":
     main()
