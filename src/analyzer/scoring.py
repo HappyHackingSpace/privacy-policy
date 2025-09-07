@@ -1,10 +1,8 @@
-from __future__ import annotations
-
-from typing import Dict, List, Any, Tuple
+from typing import Any
 
 __all__ = ["SCORING_WEIGHTS", "aggregate_chunk_results"]
 
-SCORING_WEIGHTS: Dict[str, int] = {
+SCORING_WEIGHTS: dict[str, int] = {
     "lawful_basis_and_purpose": 12,
     "collection_and_minimization": 10,
     "secondary_use_and_limits": 8,
@@ -20,11 +18,11 @@ SCORING_WEIGHTS: Dict[str, int] = {
 _REQUIRED_KEYS = set(SCORING_WEIGHTS.keys())
 
 
-def _avg(nums: List[float]) -> float:
+def _avg(nums: list[float]) -> float:
     return sum(nums) / len(nums) if nums else 0.0
 
 
-def aggregate_chunk_results(chunk_json_list: List[Dict[str, Any]]) -> Dict[str, Any]:
+def aggregate_chunk_results(chunk_json_list: list[dict[str, Any]]) -> dict[str, Any]:
     """
     Aggregates per-chunk JSON results into a weighted overall report.
     Expects each item to contain:
@@ -33,10 +31,10 @@ def aggregate_chunk_results(chunk_json_list: List[Dict[str, Any]]) -> Dict[str, 
       - optional "red_flags": [str]
       - optional "notes": [str]
     """
-    per_cat: Dict[str, List[float]] = {k: [] for k in _REQUIRED_KEYS}
-    rationales: Dict[str, List[str]] = {k: [] for k in _REQUIRED_KEYS}
-    all_red_flags: List[str] = []
-    all_notes: List[str] = []
+    per_cat: dict[str, list[float]] = {k: [] for k in _REQUIRED_KEYS}
+    rationales: dict[str, list[str]] = {k: [] for k in _REQUIRED_KEYS}
+    all_red_flags: list[str] = []
+    all_notes: list[str] = []
 
     for item in chunk_json_list:
         scores = item.get("scores", {})
@@ -53,7 +51,7 @@ def aggregate_chunk_results(chunk_json_list: List[Dict[str, Any]]) -> Dict[str, 
         if isinstance(item.get("notes"), list):
             all_notes.extend(x for x in item["notes"] if isinstance(x, str))
 
-    category_scores: Dict[str, Dict[str, Any]] = {}
+    category_scores: dict[str, dict[str, Any]] = {}
     weighted_sum = 0.0
     total_weight = 0
 
@@ -67,15 +65,17 @@ def aggregate_chunk_results(chunk_json_list: List[Dict[str, Any]]) -> Dict[str, 
         weighted_sum += (s10 / 10.0) * weight
         total_weight += weight
 
-    overall_score = round((weighted_sum / total_weight) * 100.0, 2) if total_weight else 0.0
+    overall_score = (
+        round((weighted_sum / total_weight) * 100.0, 2) if total_weight else 0.0
+    )
     coverage = sum(1 for v in per_cat.values() if v) / len(_REQUIRED_KEYS)
     confidence = round(coverage, 2)
 
-    strengths: List[Tuple[str, float]] = sorted(
+    strengths: list[tuple[str, float]] = sorted(
         ((k, v["score"]) for k, v in category_scores.items()),
         key=lambda kv: -kv[1],
     )[:3]
-    risks: List[Tuple[str, float]] = sorted(
+    risks: list[tuple[str, float]] = sorted(
         ((k, v["score"]) for k, v in category_scores.items()),
         key=lambda kv: kv[1],
     )[:3]

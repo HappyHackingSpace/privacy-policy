@@ -1,14 +1,14 @@
-from __future__ import annotations
+from typing import Final
 from textwrap import dedent
 
 __all__ = ["SYSTEM_SCORER", "build_user_prompt"]
 
-SYSTEM_SCORER = (
+SYSTEM_SCORER: Final[str] = (
     "You must return one valid JSON object that strictly matches the user's schema. "
     "Do not include any text outside JSON. Do not add extra fields."
 )
 
-_USER_SCORING_JSON = """
+_USER_SCORING_JSON: Final[str] = """
 Act as a senior global privacy/compliance auditor. Given a privacy policy excerpt,
 return ONE JSON object with category scores (0–10), concise rationales, red flags,
 and optional evidence quotes. Be jurisdiction-agnostic yet globally aware of widely
@@ -73,7 +73,17 @@ Return only one JSON object. No extra text. Excerpt:
 {chunk}
 """
 
+
 def build_user_prompt(text: str, max_len: int = 6000) -> str:
-    """Avoid str.format() because the schema contains many braces. Use a safe replace."""
-    chunk = (text[:max_len] if text else "")
+    """
+    Avoid str.format() because the schema contains many braces. Use a safe replace.
+
+    Args:
+        text: Text of the input.
+        max_len: Length of input.
+
+    Returns:
+        Built user prompt.
+    """
+    chunk = text[:max_len] if text else ""
     return dedent(_USER_SCORING_JSON).replace("{chunk}", chunk)

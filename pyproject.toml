@@ -1,0 +1,161 @@
+[project]
+name = "privacy-policy"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "openai (>=1.106.1,<2.0.0)",
+    "python-dotenv (>=1.1.1,<2.0.0)",
+    "httpx (>=0.28.1,<0.29.0)",
+    "trafilatura (>=2.0.0,<3.0.0)",
+    "beautifulsoup4 (>=4.13.5,<5.0.0)",
+    "tiktoken (>=0.11.0,<0.12.0)",
+    "tenacity (>=9.1.2,<10.0.0)",
+    "diskcache (>=5.6.3,<6.0.0)",
+    "lxml (>=5.3.0,<6)",
+    "cliff>=4.11.0",
+    "langchain-text-splitters>=0.3.11",
+    "selenium>=4.35.0",
+    "chromedriver-autoinstaller>=0.6.4",
+    "requests>=2.32.5",
+]
+
+[dependency-groups]
+dev = [
+    "mkdocs>=1.6.1",
+    "mkdocs-git-revision-date-localized-plugin>=1.4.7",
+    "mkdocs-material>=9.6.18",
+    "mypy>=1.17.1",
+    "pre-commit>=4.3.0",
+    "pytest>=8.4.2",
+    "pytest-sugar>=1.1.1",
+    "pyupgrade>=3.20.0",
+    "ruff>=0.12.12",
+    "types-requests>=2.32.4.20250809",
+]
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+]
+
+# Same as Black.
+line-length = 88
+indent-width = 4
+
+# Assume Python 3.9
+target-version = "py39"
+
+[tool.ruff.lint]
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`) codes by default.
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+select = ["E4", "E7", "E9", "F"]
+ignore = []
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+# Enable auto-formatting of code examples in docstrings. Markdown,
+# reStructuredText code/literal blocks and doctests are all supported.
+#
+# This is currently disabled by default, but it is planned for this
+# to be opt-out in the future.
+docstring-code-format = false
+
+# Set the line length limit used when formatting code snippets in
+# docstrings.
+#
+# This only has an effect when the `docstring-code-format` setting is
+# enabled.
+docstring-code-line-length = "dynamic"
+
+[tool.ruff.lint.isort]
+known-third-party = ["wandb"]
+
+[tool.mypy]
+# Global options
+python_version = "3.13"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+# Per-module options
+[[tool.mypy.overrides]]
+module = [
+    "chromedriver_autoinstaller.*",
+    "selenium.*",
+    "trafilatura.*",
+    "beautifulsoup4.*",
+    "lxml.*",
+    "tiktoken.*",
+    "tenacity.*",
+    "diskcache.*",
+    "cliff.*",
+    "langchain_text_splitters.*",
+    "analyzer.*",
+]
+ignore_missing_imports = true
+
+# Ignore specific modules that don't have type stubs
+[[tool.mypy.overrides]]
+module = "chromedriver_autoinstaller"
+ignore_missing_imports = true
+
+# Allow some dynamic behavior for BeautifulSoup
+[[tool.mypy.overrides]]
+module = "bs4.*"
+ignore_errors = true
