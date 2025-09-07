@@ -1,4 +1,4 @@
-.PHONY: install format lint clean
+.PHONY: install format lint clean test pytest mypy
 
 install:
 	uv sync
@@ -6,7 +6,7 @@ install:
 
 lint:
 	uv run ruff check ./src/*
-	poetry run pyupgrade --py311-plus $(find . -name '*.py' -not -path './.venv/*')
+	uv run pyupgrade --py313-plus $(find . -name '*.py' -not -path './.venv/*')
 
 mypy:
 	uv run mypy ./src/*
@@ -18,5 +18,8 @@ clean:
 	find . -type d -name __pycache__ -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
 
-tests:
+test:
+	uv run pytest
+
+pytest:
 	uv run pytest
