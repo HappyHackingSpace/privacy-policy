@@ -40,35 +40,35 @@ pip install -e .
 ### Basic Usage
 
 ```python
-from privacy_policy import PrivacyPolicyAnalyzer
+# Analyze a homepage URL — auto-discovery will attempt to resolve a policy page
+python -m src.main --url "https://example.com"
 
-# Initialize the analyzer
-analyzer = PrivacyPolicyAnalyzer()
-
-# Analyze a privacy policy URL
-result = analyzer.analyze_url("https://example.com/privacy")
-
-# Print the analysis results
-print(f"Privacy Score: {result.score}")
-print(f"Key Findings: {result.findings}")
+# Analyze a known policy URL directly
+python -m src.main --url "https://example.com/privacy-policy" --no-discover
 ```
 
 ## 📊 Analysis Dimensions
 
-Our analyzer evaluates privacy policies across several key dimensions:
+The analyzer evaluates privacy policies across ten key dimensions.  
+Each dimension is scored on a **0–10 scale**, then combined with weights to produce a final **0–100 overall score**.
 
-- **Data Collection**: What data is collected and how
-- **Data Sharing**: Who data is shared with and under what conditions
-- **User Rights**: What rights users have over their data
-- **Transparency**: How clear and understandable the policy is
-- **Compliance**: Adherence to privacy regulations (GDPR, CCPA, etc.)
+- **Lawful Basis & Purpose**: Whether the policy explains clear purposes for processing and, where relevant, the legal basis or justification.  
+- **Collection & Minimization**: How clearly the policy describes the types of data collected and whether collection is limited to what is necessary.  
+- **Secondary Use & Limits**: Whether the policy restricts or explains additional uses beyond the original purpose.  
+- **Retention & Deletion**: Clarity on how long data is kept, deletion practices, or criteria for determining retention.  
+- **Third Parties & Processors**: Disclosure of processors, vendors, or third parties with whom data is shared, and their roles.  
+- **Cross-Border Transfers**: Information on transfers outside the user’s country/region and safeguards in place.  
+- **User Rights & Redress**: How users can exercise rights such as access, correction, deletion, or complaint, and available escalation channels.  
+- **Security & Breach**: Security measures described and any statements about breach notification or handling.  
+- **Transparency & Notice**: Overall clarity, structure, contact details, and how users are informed of updates or changes.  
+- **Sensitive Data, Children, Ads & Profiling**: How sensitive categories are handled, rules for children’s data, use of data for advertising, and automated decision-making/profiling.
 
 ## 🔧 Advanced Features
 
-- **Custom Prompts**: Tailor analysis to your specific needs
-- **Batch Processing**: Analyze multiple policies at once
-- **Export Options**: Generate reports in various formats
-- **API Integration**: RESTful API for web applications
+- **Flexible Fetching**: Choose between `auto`, `http`, or `selenium` modes.  
+- **Configurable Chunking**: Control `--chunk-size`, `--chunk-overlap`, and `--max-chunks` for long policies.  
+- **Multiple Report Levels**: Select `summary`, `detailed`, or `full` output.  
+- **Model Override**: Use `--model` or the `OPENAI_MODEL` environment variable to select your OpenAI model.  
 
 ## 📚 Documentation
 

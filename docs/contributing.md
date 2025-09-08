@@ -35,7 +35,7 @@ cd privacy-policy
 3. Add the upstream repository:
 
 ```bash
-git remote add upstream https://github.com/original-username/privacy-policy.git
+git remote add upstream https://github.com/HappyHackingSpace/privacy-policy.git
 ```
 
 ## 🔧 Development Setup
@@ -47,7 +47,7 @@ git remote add upstream https://github.com/original-username/privacy-policy.git
 uv sync --dev
 
 # Using pip
-pip install -e ".[dev]"
+pip install -e .
 ```
 
 ### 2. Install Pre-commit Hooks
@@ -64,8 +64,8 @@ cp .env.example .env
 
 # Edit .env with your configuration
 # OPENAI_API_KEY=your-api-key-here
-# CACHE_DIR=./cache
-# LOG_LEVEL=DEBUG
+# Optional:
+# OPENAI_MODEL=gpt-4o
 ```
 
 ### 4. Verify Setup
@@ -77,7 +77,7 @@ uv run pytest
 # Run linting
 uv run ruff check
 
-# Run type checking
+# Run type checking (if configured)
 uv run mypy src/
 ```
 
@@ -132,7 +132,7 @@ We follow PEP 8 with some modifications:
 We use automated formatting tools:
 
 ```bash
-# Format code
+# Format code (choose either)
 uv run black src/ tests/
 uv run isort src/ tests/
 
@@ -153,7 +153,7 @@ uv run ruff check --fix src/ tests/
 ### Type Checking
 
 ```bash
-# Run type checker
+# Run type checker (if configured)
 uv run mypy src/
 ```
 
@@ -183,24 +183,40 @@ uv run pytest -v
 - **Fixtures**: Use pytest fixtures for common setup
 - **Coverage**: Aim for high test coverage
 
-### Test Structure
+### Example Unit Test (project-realistic)
 
 ```python
 import pytest
-from privacy_policy import PrivacyPolicyAnalyzer
+from src.analyzer.scoring import aggregate_chunk_results
 
-class TestPrivacyPolicyAnalyzer:
-    def test_initialization(self):
-        """Test analyzer initialization."""
-        analyzer = PrivacyPolicyAnalyzer()
-        assert analyzer is not None
+ALL_CATEGORIES = [
+    "lawful_basis_and_purpose",
+    "collection_and_minimization",
+    "secondary_use_and_limits",
+    "retention_and_deletion",
+    "third_parties_and_processors",
+    "cross_border_transfers",
+    "user_rights_and_redress",
+    "security_and_breach",
+    "transparency_and_notice",
+    "sensitive_children_ads_profiling",
+]
 
-    def test_analyze_text(self):
-        """Test text analysis."""
-        analyzer = PrivacyPolicyAnalyzer()
-        result = analyzer.analyze_text("Test privacy policy text")
-        assert result.overall_score >= 0
-        assert result.overall_score <= 100
+def test_aggregate_chunk_results_basic():
+    # Minimal valid per-chunk payload matching the prompt schema (0–10 per category)
+    scores = {k: 7 for k in ALL_CATEGORIES}
+    rationales = {k: "ok" for k in ALL_CATEGORIES}
+    chunk_json_list = [{
+        "scores": scores,
+        "rationales": rationales,
+        "red_flags": [],
+        "notes": [],
+    }]
+
+    agg = aggregate_chunk_results(chunk_json_list)
+    assert 0 <= agg["overall_score"] <= 100
+    assert "category_scores" in agg and isinstance(agg["category_scores"], dict)
+    assert 0 <= agg["confidence"] <= 1
 ```
 
 ## 📚 Documentation
@@ -211,44 +227,36 @@ class TestPrivacyPolicyAnalyzer:
 - **Type Hints**: Use type hints for all parameters and return values
 - **Comments**: Add comments for complex logic
 
-### Example Docstring
+### Example Docstring (for an existing function)
 
 ```python
-def analyze_url(
-    self,
-    url: str,
-    extract_method: str = "auto",
-    timeout: Optional[int] = None,
-    follow_redirects: bool = True,
-    custom_prompts: Optional[Dict[str, str]] = None
-) -> AnalysisResult:
-    """Analyze a privacy policy from a URL.
+from typing import Optional, Tuple
+
+def resolve_privacy_url(input_url: str) -> Tuple[str, Optional[str]]:
+    """Resolve a likely privacy policy URL starting from any given page.
+
+    The function checks common policy paths, verifies candidates with a lightweight
+    content probe, inspects robots.txt and sitemaps, and finally scans in-page links
+    for privacy-related anchors.
 
     Args:
-        url: URL of the privacy policy page
-        extract_method: Method for extracting content
-        timeout: Override default timeout for this request
-        follow_redirects: Whether to follow redirects
-        custom_prompts: Custom prompts for analysis
+        input_url: A site page or a direct policy URL.
 
     Returns:
-        AnalysisResult object with analysis results
-
-    Raises:
-        ExtractionError: If content extraction fails
-        AnalysisError: If analysis fails
-        NetworkError: If network request fails
+        A tuple (resolved_url, original_input_if_discovery_used).
+        If discovery is skipped or unnecessary, the second item may be None.
     """
+    ...
 ```
 
 ### Documentation Updates
 
-When adding features or changing APIs:
+When adding features or changing behavior:
 
 1. **Update Docstrings**: Update relevant docstrings
 2. **Update README**: Update README if needed
 3. **Update User Guide**: Update user guide for new features
-4. **Update API Docs**: Update API documentation
+4. **Update API Docs**: Update CLI reference as needed
 5. **Add Examples**: Add usage examples
 
 ## 🔄 Submitting Changes

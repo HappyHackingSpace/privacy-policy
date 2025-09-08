@@ -1,6 +1,6 @@
 # User Guide
 
-This comprehensive guide will help you get started with the Privacy Policy Analyzer and make the most of its features.
+This guide explains how to install, run, and interpret results from **Privacy Policy Analyzer**. The tool is currently **CLI-first** (no stable class-based API).
 
 ## 📋 Table of Contents
 
@@ -11,388 +11,217 @@ This comprehensive guide will help you get started with the Privacy Policy Analy
 - [Understanding Results](#understanding-results)
 - [Advanced Features](#advanced-features)
 - [Troubleshooting](#troubleshooting)
+- [Examples](#examples)
+- [Getting Help](#getting-help)
 
 ## 🚀 Installation
 
 ### Prerequisites
 
-- Python 3.13 or higher
-- Internet connection for downloading models and accessing websites
+- Python 3.13+  
+- An OpenAI API key available in your environment (or `.env`)  
+- Google Chrome (required only if you plan to use Selenium fallback)  
+- Optional: `trafilatura` for enhanced extraction
 
-### Install the Package
+### Using uv (recommended)
 
 ```bash
-# Using uv (recommended)
-uv add privacy-policy
-
-# Using pip
-pip install privacy-policy
-
-# From source
-git clone https://github.com/your-username/privacy-policy.git
+git clone https://github.com/HappyHackingSpace/privacy-policy.git
 cd privacy-policy
 uv sync
+# optional: activate .venv if you prefer a shell-activated workflow
+# macOS/Linux: source .venv/bin/activate
+# Windows: .venv\Scripts\activate
 ```
 
-### Verify Installation
+### Using Poetry
 
-```python
-import privacy_policy
-print(f"Privacy Policy Analyzer version: {privacy_policy.__version__}")
+```bash
+git clone https://github.com/HappyHackingSpace/privacy-policy.git
+cd privacy-policy
+poetry install
+# run commands with: poetry run <command>
+```
+
+### Using pip
+
+```bash
+git clone https://github.com/HappyHackingSpace/privacy-policy.git
+cd privacy-policy
+python -m venv .venv
+# macOS/Linux:
+source .venv/bin/activate
+# Windows:
+.venv\Scripts\activate
+pip install -e .
+```
+
+Create a `.env` file if desired:
+
+
+Verify that your API key is visible to the process:
+
+```bash
+python -c "import os; print('API key set:', bool(os.getenv('OPENAI_API_KEY')))"
 ```
 
 ## 🔧 Basic Usage
 
-### 1. Initialize the Analyzer
+Run the CLI with a site URL (auto-discovery will try to resolve a likely privacy policy page):
 
-```python
-from privacy_policy import PrivacyPolicyAnalyzer
-
-# Basic initialization
-analyzer = PrivacyPolicyAnalyzer()
-
-# With custom configuration
-analyzer = PrivacyPolicyAnalyzer(
-    api_key="your-openai-api-key",
-    cache_dir="./cache",
-    timeout=30
-)
+```bash
+# uv
+uv run python src/main.py --url https://example.com
+# or module form
+python -m src.main --url https://example.com
 ```
 
-### 2. Analyze a Privacy Policy
+Analyze a known policy URL directly (skip auto-discovery):
 
-#### From URL
-
-```python
-# Analyze a privacy policy from a website
-result = analyzer.analyze_url("https://example.com/privacy-policy")
-
-print(f"Overall Score: {result.overall_score}")
-print(f"Confidence: {result.confidence}")
-print(f"Key Findings: {result.findings}")
+```bash
+uv run python src/main.py --url https://example.com/privacy-policy --no-discover
 ```
 
-#### From Text
+Choose a fetch method:
 
-```python
-# Analyze privacy policy text directly
-policy_text = """
-Your privacy is important to us. We collect information...
-"""
-
-result = analyzer.analyze_text(policy_text)
+```bash
+uv run python src/main.py --url https://example.com/privacy --fetch selenium
 ```
 
-#### From File
+Control output detail:
 
-```python
-# Analyze a privacy policy from a local file
-result = analyzer.analyze_file("privacy_policy.txt")
-```
-
-### 3. Understanding the Results
-
-```python
-# Access detailed results
-print("=== PRIVACY ANALYSIS RESULTS ===")
-print(f"Overall Score: {result.overall_score}/100")
-print(f"Confidence: {result.confidence}%")
-print(f"Analysis Time: {result.analysis_time:.2f}s")
-
-print("\n=== DIMENSION SCORES ===")
-for dimension, score in result.dimension_scores.items():
-    print(f"{dimension}: {score}/100")
-
-print("\n=== KEY FINDINGS ===")
-for finding in result.findings:
-    print(f"- {finding}")
-
-print("\n=== RECOMMENDATIONS ===")
-for recommendation in result.recommendations:
-    print(f"- {recommendation}")
+```bash
+uv run python src/main.py --url https://example.com --report detailed
 ```
 
 ## ⚙️ Configuration
 
 ### Environment Variables
 
-Set up your API key and other configuration:
+You can configure the model and environment via variables or flags.
 
-```bash
-# .env file
-OPENAI_API_KEY=your-api-key-here
-CACHE_DIR=./cache
-DEFAULT_TIMEOUT=30
-LOG_LEVEL=INFO
-```
+- **Required**
+  - `OPENAI_API_KEY`: your OpenAI key
 
-### Configuration Options
+- **Optional**
+  - `OPENAI_MODEL`: default model if `--model` is not provided (defaults to `gpt-4o`)
 
-```python
-from privacy_policy import PrivacyPolicyAnalyzer
+CLI flags that control analysis:
 
-analyzer = PrivacyPolicyAnalyzer(
-    # API Configuration
-    api_key="your-api-key",
-    model="gpt-4",
-    temperature=0.1,
+- `--model TEXT`  
+  Override the OpenAI model for this run.
 
-    # Caching
-    cache_dir="./cache",
-    cache_ttl=3600,  # 1 hour
+- `--report {summary|detailed|full}`  
+  Select output verbosity.  
+  - `summary`: overall score, confidence, top strengths/risks, red-flag count  
+  - `detailed`: includes per-category details, red flags, recommendations  
+  - `full`: includes raw per-chunk results
 
-    # Network
-    timeout=30,
-    max_retries=3,
+- `--chunk-size INT`, `--chunk-overlap INT`, `--max-chunks INT`  
+  Tune chunking for very long policies (tail chunks may be merged when `--max-chunks` is exceeded).
 
-    # Analysis
-    include_recommendations=True,
-    detailed_analysis=True,
-    language="en"
-)
-```
+- `--fetch {auto|http|selenium}`  
+  Extraction mode (auto uses HTTP first and can fall back to Selenium).
+
+- `--no-discover`  
+  Analyze the provided URL as-is (no policy URL resolution).
 
 ## 🔍 Analysis Methods
 
-### 1. URL Analysis
+- **URL analysis with auto-discovery**  
+  Provide a site homepage or any page; the tool attempts to find a likely policy path (e.g., `/privacy`, `/privacy-policy`, robots/sitemap hints, or in-page links).
 
-```python
-# Basic URL analysis
-result = analyzer.analyze_url("https://example.com/privacy")
+- **Direct policy URL**  
+  If you already know the exact policy page, use `--no-discover` to skip discovery.
 
-# With custom options
-result = analyzer.analyze_url(
-    "https://example.com/privacy",
-    extract_method="trafilatura",  # or "beautifulsoup"
-    timeout=60,
-    follow_redirects=True
-)
-```
+- **Extraction**  
+  Content is fetched via HTTP/BeautifulSoup by default, optionally through Trafilatura when available, and can fall back to Selenium for client-rendered pages.
 
-### 2. Text Analysis
-
-```python
-# Analyze raw text
-result = analyzer.analyze_text(policy_text)
-
-# With custom prompts
-result = analyzer.analyze_text(
-    policy_text,
-    custom_prompts={
-        "data_collection": "Focus on data collection practices",
-        "sharing": "Analyze data sharing policies"
-    }
-)
-```
-
-### 3. Batch Analysis
-
-```python
-# Analyze multiple URLs
-urls = [
-    "https://example1.com/privacy",
-    "https://example2.com/privacy",
-    "https://example3.com/privacy"
-]
-
-results = analyzer.analyze_batch(urls)
-
-# Compare results
-comparison = analyzer.compare_results(results)
-print(comparison.summary)
-```
+- **Chunking & scoring**  
+  Extracted text is split into overlapping chunks; each chunk is scored by the model with a fixed schema. Category scores (each **0–10**) are aggregated with weights into a **0–100** overall score.
 
 ## 📊 Understanding Results
 
-### Score Interpretation
+The CLI prints **JSON** to stdout.
 
-- **90-100**: Excellent privacy practices
-- **80-89**: Good privacy practices with minor issues
-- **70-79**: Fair privacy practices with some concerns
-- **60-69**: Poor privacy practices with significant issues
-- **Below 60**: Very poor privacy practices
+Common fields:
 
-### Dimension Scores
+- `status`: `"ok"` or `"error"`
+- `url`: the input URL you provided
+- `resolved_url`: the discovered/verified policy URL (if discovery was used)
+- `model`: OpenAI model used (e.g., `gpt-4o`)
+- `chunks` / `valid_chunks`: number of chunks analyzed and number that produced valid scores
+- `overall_score`: weighted 0–100 score across all categories
+- `confidence`: coverage ratio (0–1), based on how many categories received valid scores
+- `category_scores`: per-category `{score (0–10), weight, rationale}`
+- `top_strengths` / `top_risks`: strongest/weakest categories
+- `red_flags`: unique risk indicators extracted from chunk results
+- `recommendations`: short, actionable notes
+- (`full` only) `chunks`: raw per-chunk outputs
 
-The analyzer evaluates several key dimensions:
+### Dimensions (what they mean)
 
-- **Data Collection** (0-100): How much and what type of data is collected
-- **Data Sharing** (0-100): How data is shared with third parties
-- **User Rights** (0-100): What rights users have over their data
-- **Transparency** (0-100): How clear and understandable the policy is
-- **Compliance** (0-100): Adherence to privacy regulations
+Each dimension is scored **0–10**; weights are applied to compute the overall score:
 
-### Confidence Levels
-
-- **High (80-100%)**: Very confident in the analysis
-- **Medium (60-79%)**: Moderately confident
-- **Low (Below 60%)**: Low confidence, manual review recommended
+- **Lawful Basis & Purpose**: Whether the policy explains clear purposes for processing and, where relevant, the legal basis or justification.  
+- **Collection & Minimization**: How clearly the policy describes the types of data collected and whether collection is limited to what is necessary.  
+- **Secondary Use & Limits**: Whether the policy restricts or explains additional uses beyond the original purpose.  
+- **Retention & Deletion**: Clarity on how long data is kept, deletion practices, or criteria for determining retention.  
+- **Third Parties & Processors**: Disclosure of processors, vendors, or third parties with whom data is shared, and their roles.  
+- **Cross-Border Transfers**: Information on transfers outside the user’s country/region and safeguards in place.  
+- **User Rights & Redress**: How users can exercise rights such as access, correction, deletion, or complaint, and available escalation channels.  
+- **Security & Breach**: Security measures described and any statements about breach notification or handling.  
+- **Transparency & Notice**: Overall clarity, structure, contact details, and how users are informed of updates or changes.  
+- **Sensitive Data, Children, Ads & Profiling**: How sensitive categories are handled, rules for children’s data, use of data for advertising, and automated decision-making/profiling.
 
 ## 🚀 Advanced Features
 
-### Custom Prompts
+- **Flexible fetching** with `--fetch auto|http|selenium`  
+- **Configurable chunking** via `--chunk-size`, `--chunk-overlap`, `--max-chunks`  
+- **Report levels** with `--report summary|detailed|full`  
+- **Model override** with `--model` or `OPENAI_MODEL`
 
-```python
-# Define custom analysis prompts
-custom_prompts = {
-    "data_collection": """
-    Analyze the data collection practices in this privacy policy.
-    Focus on:
-    - What data is collected
-    - How it's collected
-    - Legal basis for collection
-    """,
-
-    "user_rights": """
-    Identify user rights mentioned in this privacy policy.
-    Look for:
-    - Access rights
-    - Deletion rights
-    - Portability rights
-    - Opt-out options
-    """
-}
-
-result = analyzer.analyze_text(policy_text, custom_prompts=custom_prompts)
-```
-
-### Caching
-
-```python
-# Enable caching for better performance
-analyzer = PrivacyPolicyAnalyzer(
-    cache_dir="./cache",
-    cache_ttl=3600  # Cache for 1 hour
-)
-
-# Clear cache when needed
-analyzer.clear_cache()
-```
-
-### Export Results
-
-```python
-# Export to JSON
-result.export_json("analysis_results.json")
-
-# Export to CSV
-result.export_csv("analysis_results.csv")
-
-# Export to HTML report
-result.export_html("privacy_report.html")
-```
+> Note: Caching, batch processing, CSV/HTML exports, and a stable importable Python API are not part of the current CLI release. See the roadmap in the contributing guide.
 
 ## 🔧 Troubleshooting
 
-### Common Issues
+- **`OPENAI_API_KEY is not set`**  
+  Set the key in your environment or a `.env` file.
 
-#### 1. API Key Issues
+- **Empty or insufficient text**  
+  Allow auto-discovery (avoid `--no-discover`) or provide a better URL. Some pages may require Selenium (`--fetch selenium`) to render content.
 
-```python
-# Check if API key is set
-import os
-print(f"API Key set: {bool(os.getenv('OPENAI_API_KEY'))}")
+- **Very long policies**  
+  Increase `--max-chunks`, or adjust `--chunk-size`/`--chunk-overlap`. The tool merges tail chunks to stay within limits.
 
-# Set API key programmatically
-analyzer = PrivacyPolicyAnalyzer(api_key="your-key-here")
-```
-
-#### 2. Network Issues
-
-```python
-# Increase timeout for slow websites
-result = analyzer.analyze_url(
-    "https://slow-website.com/privacy",
-    timeout=120
-)
-
-# Use different extraction method
-result = analyzer.analyze_url(
-    "https://example.com/privacy",
-    extract_method="beautifulsoup"  # Try different method
-)
-```
-
-#### 3. Content Extraction Issues
-
-```python
-# Check if content was extracted
-result = analyzer.analyze_url("https://example.com/privacy")
-print(f"Content extracted: {len(result.raw_content) > 0}")
-print(f"Content length: {len(result.raw_content)} characters")
-
-# Try manual extraction
-from privacy_policy.extractors import WebExtractor
-extractor = WebExtractor()
-content = extractor.extract("https://example.com/privacy")
-```
-
-### Debug Mode
-
-```python
-# Enable debug logging
-import logging
-logging.basicConfig(level=logging.DEBUG)
-
-analyzer = PrivacyPolicyAnalyzer(debug=True)
-result = analyzer.analyze_url("https://example.com/privacy")
-```
+- **Model issues**  
+  Ensure the selected model supports JSON-style responses. The tool uses `temperature=0` for consistent scoring.
 
 ## 📚 Examples
 
-### Example 1: Basic Analysis
+Analyze a homepage with default settings:
 
-```python
-from privacy_policy import PrivacyPolicyAnalyzer
-
-# Initialize
-analyzer = PrivacyPolicyAnalyzer()
-
-# Analyze
-result = analyzer.analyze_url("https://example.com/privacy")
-
-# Display results
-print(f"Privacy Score: {result.overall_score}/100")
-print(f"Key Issues: {result.findings}")
+```bash
+uv run python src/main.py --url https://example.com
 ```
 
-### Example 2: Comparative Analysis
+Analyze a known policy URL with detailed output:
 
-```python
-# Analyze multiple policies
-urls = [
-    "https://company1.com/privacy",
-    "https://company2.com/privacy"
-]
-
-results = []
-for url in urls:
-    result = analyzer.analyze_url(url)
-    results.append(result)
-
-# Compare
-comparison = analyzer.compare_results(results)
-print(comparison.summary)
+```bash
+uv run python src/main.py --url https://example.com/privacy-policy --no-discover --report detailed
 ```
 
-### Example 3: Custom Analysis
+Force Selenium for a client-rendered policy:
 
-```python
-# Custom analysis with specific focus
-custom_prompts = {
-    "gdpr_compliance": "Analyze GDPR compliance aspects",
-    "data_minimization": "Check data minimization practices"
-}
-
-result = analyzer.analyze_text(
-    policy_text,
-    custom_prompts=custom_prompts
-)
-
-print("GDPR Compliance:", result.custom_scores["gdpr_compliance"])
-print("Data Minimization:", result.custom_scores["data_minimization"])
+```bash
+uv run python src/main.py --url https://example.com/privacy --fetch selenium
 ```
 
+Tune chunking for very long policies:
+
+```bash
+uv run python src/main.py --url https://example.com --chunk-size 3000 --chunk-overlap 300 --max-chunks 25
+```
 ## 🆘 Getting Help
 
 - **Documentation**: Check the [API Reference](api.md) for detailed API documentation
