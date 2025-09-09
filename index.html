@@ -851,33 +851,33 @@ and analyze privacy policies with ease.</p>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </code></pre></div>
 <h3 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">privacy_policy</span><span class="w"> </span><span class="kn">import</span> <span class="n">PrivacyPolicyAnalyzer</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Initialize the analyzer</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">analyzer</span> <span class="o">=</span> <span class="n">PrivacyPolicyAnalyzer</span><span class="p">()</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Analyze a privacy policy URL</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">result</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_url</span><span class="p">(</span><span class="s2">&quot;https://example.com/privacy&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Print the analysis results</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Privacy Score: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">score</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Key Findings: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">findings</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Analyze a homepage URL — auto-discovery will attempt to resolve a policy page</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">src</span><span class="o">.</span><span class="n">main</span> <span class="o">--</span><span class="n">url</span> <span class="s2">&quot;https://example.com&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Analyze a known policy URL directly</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">src</span><span class="o">.</span><span class="n">main</span> <span class="o">--</span><span class="n">url</span> <span class="s2">&quot;https://example.com/privacy-policy&quot;</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">discover</span>
 </code></pre></div>
 <h2 id="analysis-dimensions">📊 Analysis Dimensions<a class="headerlink" href="#analysis-dimensions" title="Permanent link">&para;</a></h2>
-<p>Our analyzer evaluates privacy policies across several key dimensions:</p>
+<p>The analyzer evaluates privacy policies across ten key dimensions.<br />
+Each dimension is scored on a <strong>0–10 scale</strong>, then combined with weights to produce a final <strong>0–100 overall score</strong>.</p>
 <ul>
-<li><strong>Data Collection</strong>: What data is collected and how</li>
-<li><strong>Data Sharing</strong>: Who data is shared with and under what conditions</li>
-<li><strong>User Rights</strong>: What rights users have over their data</li>
-<li><strong>Transparency</strong>: How clear and understandable the policy is</li>
-<li><strong>Compliance</strong>: Adherence to privacy regulations (GDPR, CCPA, etc.)</li>
+<li><strong>Lawful Basis &amp; Purpose</strong>: Whether the policy explains clear purposes for processing and, where relevant, the legal basis or justification.  </li>
+<li><strong>Collection &amp; Minimization</strong>: How clearly the policy describes the types of data collected and whether collection is limited to what is necessary.  </li>
+<li><strong>Secondary Use &amp; Limits</strong>: Whether the policy restricts or explains additional uses beyond the original purpose.  </li>
+<li><strong>Retention &amp; Deletion</strong>: Clarity on how long data is kept, deletion practices, or criteria for determining retention.  </li>
+<li><strong>Third Parties &amp; Processors</strong>: Disclosure of processors, vendors, or third parties with whom data is shared, and their roles.  </li>
+<li><strong>Cross-Border Transfers</strong>: Information on transfers outside the user’s country/region and safeguards in place.  </li>
+<li><strong>User Rights &amp; Redress</strong>: How users can exercise rights such as access, correction, deletion, or complaint, and available escalation channels.  </li>
+<li><strong>Security &amp; Breach</strong>: Security measures described and any statements about breach notification or handling.  </li>
+<li><strong>Transparency &amp; Notice</strong>: Overall clarity, structure, contact details, and how users are informed of updates or changes.  </li>
+<li><strong>Sensitive Data, Children, Ads &amp; Profiling</strong>: How sensitive categories are handled, rules for children’s data, use of data for advertising, and automated decision-making/profiling.</li>
 </ul>
 <h2 id="advanced-features">🔧 Advanced Features<a class="headerlink" href="#advanced-features" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Custom Prompts</strong>: Tailor analysis to your specific needs</li>
-<li><strong>Batch Processing</strong>: Analyze multiple policies at once</li>
-<li><strong>Export Options</strong>: Generate reports in various formats</li>
-<li><strong>API Integration</strong>: RESTful API for web applications</li>
+<li><strong>Flexible Fetching</strong>: Choose between <code>auto</code>, <code>http</code>, or <code>selenium</code> modes.  </li>
+<li><strong>Configurable Chunking</strong>: Control <code>--chunk-size</code>, <code>--chunk-overlap</code>, and <code>--max-chunks</code> for long policies.  </li>
+<li><strong>Multiple Report Levels</strong>: Select <code>summary</code>, <code>detailed</code>, or <code>full</code> output.  </li>
+<li><strong>Model Override</strong>: Use <code>--model</code> or the <code>OPENAI_MODEL</code> environment variable to select your OpenAI model.  </li>
 </ul>
 <h2 id="documentation">📚 Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
 <ul>
@@ -919,7 +919,7 @@ and analyze privacy policies with ease.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2025 15:58:12 UTC">September 7, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 8, 2025 20:41:14 UTC">September 8, 2025</span>
   </span>
 
     

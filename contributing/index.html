@@ -731,9 +731,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-structure" class="md-nav__link">
+  <a href="#example-unit-test-project-realistic" class="md-nav__link">
     <span class="md-ellipsis">
-      Test Structure
+      Example Unit Test (project-realistic)
     </span>
   </a>
   
@@ -764,9 +764,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#example-docstring" class="md-nav__link">
+  <a href="#example-docstring-for-an-existing-function" class="md-nav__link">
     <span class="md-ellipsis">
-      Example Docstring
+      Example Docstring (for an existing function)
     </span>
   </a>
   
@@ -1192,9 +1192,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-structure" class="md-nav__link">
+  <a href="#example-unit-test-project-realistic" class="md-nav__link">
     <span class="md-ellipsis">
-      Test Structure
+      Example Unit Test (project-realistic)
     </span>
   </a>
   
@@ -1225,9 +1225,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#example-docstring" class="md-nav__link">
+  <a href="#example-docstring-for-an-existing-function" class="md-nav__link">
     <span class="md-ellipsis">
-      Example Docstring
+      Example Docstring (for an existing function)
     </span>
   </a>
   
@@ -1437,7 +1437,7 @@ provides guidelines and information for contributors.</p>
 <ol>
 <li>Add the upstream repository:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>upstream<span class="w"> </span>https://github.com/original-username/privacy-policy.git
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>upstream<span class="w"> </span>https://github.com/HappyHackingSpace/privacy-policy.git
 </code></pre></div>
 <h2 id="development-setup">🔧 Development Setup<a class="headerlink" href="#development-setup" title="Permanent link">&para;</a></h2>
 <h3 id="1-install-dependencies">1. Install Dependencies<a class="headerlink" href="#1-install-dependencies" title="Permanent link">&para;</a></h3>
@@ -1445,7 +1445,7 @@ provides guidelines and information for contributors.</p>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--dev
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Using pip</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </code></pre></div>
 <h3 id="2-install-pre-commit-hooks">2. Install Pre-commit Hooks<a class="headerlink" href="#2-install-pre-commit-hooks" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>uv<span class="w"> </span>run<span class="w"> </span>pre-commit<span class="w"> </span>install
@@ -1456,8 +1456,8 @@ provides guidelines and information for contributors.</p>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Edit .env with your configuration</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># OPENAI_API_KEY=your-api-key-here</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># CACHE_DIR=./cache</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># LOG_LEVEL=DEBUG</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Optional:</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># OPENAI_MODEL=gpt-4o</span>
 </code></pre></div>
 <h3 id="4-verify-setup">4. Verify Setup<a class="headerlink" href="#4-verify-setup" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Run tests</span>
@@ -1466,7 +1466,7 @@ provides guidelines and information for contributors.</p>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Run linting</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>uv<span class="w"> </span>run<span class="w"> </span>ruff<span class="w"> </span>check
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Run type checking</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Run type checking (if configured)</span>
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>uv<span class="w"> </span>run<span class="w"> </span>mypy<span class="w"> </span>src/
 </code></pre></div>
 <h2 id="contributing-guidelines">📝 Contributing Guidelines<a class="headerlink" href="#contributing-guidelines" title="Permanent link">&para;</a></h2>
@@ -1512,7 +1512,7 @@ provides guidelines and information for contributors.</p>
 </ul>
 <h3 id="formatting">Formatting<a class="headerlink" href="#formatting" title="Permanent link">&para;</a></h3>
 <p>We use automated formatting tools:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Format code</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Format code (choose either)</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>uv<span class="w"> </span>run<span class="w"> </span>black<span class="w"> </span>src/<span class="w"> </span>tests/
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>uv<span class="w"> </span>run<span class="w"> </span>isort<span class="w"> </span>src/<span class="w"> </span>tests/
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
@@ -1527,7 +1527,7 @@ provides guidelines and information for contributors.</p>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>uv<span class="w"> </span>run<span class="w"> </span>ruff<span class="w"> </span>check<span class="w"> </span>--fix<span class="w"> </span>src/<span class="w"> </span>tests/
 </code></pre></div>
 <h3 id="type-checking">Type Checking<a class="headerlink" href="#type-checking" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Run type checker</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Run type checker (if configured)</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>uv<span class="w"> </span>run<span class="w"> </span>mypy<span class="w"> </span>src/
 </code></pre></div>
 <h2 id="testing">🧪 Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
@@ -1552,22 +1552,38 @@ provides guidelines and information for contributors.</p>
 <li><strong>Fixtures</strong>: Use pytest fixtures for common setup</li>
 <li><strong>Coverage</strong>: Aim for high test coverage</li>
 </ul>
-<h3 id="test-structure">Test Structure<a class="headerlink" href="#test-structure" title="Permanent link">&para;</a></h3>
+<h3 id="example-unit-test-project-realistic">Example Unit Test (project-realistic)<a class="headerlink" href="#example-unit-test-project-realistic" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">privacy_policy</span><span class="w"> </span><span class="kn">import</span> <span class="n">PrivacyPolicyAnalyzer</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.analyzer.scoring</span><span class="w"> </span><span class="kn">import</span> <span class="n">aggregate_chunk_results</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestPrivacyPolicyAnalyzer</span><span class="p">:</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_initialization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Test analyzer initialization.&quot;&quot;&quot;</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>        <span class="n">analyzer</span> <span class="o">=</span> <span class="n">PrivacyPolicyAnalyzer</span><span class="p">()</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>        <span class="k">assert</span> <span class="n">analyzer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_analyze_text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Test text analysis.&quot;&quot;&quot;</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>        <span class="n">analyzer</span> <span class="o">=</span> <span class="n">PrivacyPolicyAnalyzer</span><span class="p">()</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_text</span><span class="p">(</span><span class="s2">&quot;Test privacy policy text&quot;</span><span class="p">)</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">overall_score</span> <span class="o">&gt;=</span> <span class="mi">0</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">overall_score</span> <span class="o">&lt;=</span> <span class="mi">100</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">ALL_CATEGORIES</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="s2">&quot;lawful_basis_and_purpose&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="s2">&quot;collection_and_minimization&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="s2">&quot;secondary_use_and_limits&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="s2">&quot;retention_and_deletion&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    <span class="s2">&quot;third_parties_and_processors&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    <span class="s2">&quot;cross_border_transfers&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    <span class="s2">&quot;user_rights_and_redress&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    <span class="s2">&quot;security_and_breach&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    <span class="s2">&quot;transparency_and_notice&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    <span class="s2">&quot;sensitive_children_ads_profiling&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="p">]</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_aggregate_chunk_results_basic</span><span class="p">():</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>    <span class="c1"># Minimal valid per-chunk payload matching the prompt schema (0–10 per category)</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>    <span class="n">scores</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="mi">7</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ALL_CATEGORIES</span><span class="p">}</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>    <span class="n">rationales</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="s2">&quot;ok&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ALL_CATEGORIES</span><span class="p">}</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>    <span class="n">chunk_json_list</span> <span class="o">=</span> <span class="p">[{</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>        <span class="s2">&quot;scores&quot;</span><span class="p">:</span> <span class="n">scores</span><span class="p">,</span>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>        <span class="s2">&quot;rationales&quot;</span><span class="p">:</span> <span class="n">rationales</span><span class="p">,</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>        <span class="s2">&quot;red_flags&quot;</span><span class="p">:</span> <span class="p">[],</span>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>        <span class="s2">&quot;notes&quot;</span><span class="p">:</span> <span class="p">[],</span>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>    <span class="p">}]</span>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>    <span class="n">agg</span> <span class="o">=</span> <span class="n">aggregate_chunk_results</span><span class="p">(</span><span class="n">chunk_json_list</span><span class="p">)</span>
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>    <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">agg</span><span class="p">[</span><span class="s2">&quot;overall_score&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">100</span>
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>    <span class="k">assert</span> <span class="s2">&quot;category_scores&quot;</span> <span class="ow">in</span> <span class="n">agg</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">agg</span><span class="p">[</span><span class="s2">&quot;category_scores&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span>
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>    <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">agg</span><span class="p">[</span><span class="s2">&quot;confidence&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span>
 </code></pre></div>
 <h2 id="documentation">📚 Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
 <h3 id="code-documentation">Code Documentation<a class="headerlink" href="#code-documentation" title="Permanent link">&para;</a></h3>
@@ -1576,40 +1592,32 @@ provides guidelines and information for contributors.</p>
 <li><strong>Type Hints</strong>: Use type hints for all parameters and return values</li>
 <li><strong>Comments</strong>: Add comments for complex logic</li>
 </ul>
-<h3 id="example-docstring">Example Docstring<a class="headerlink" href="#example-docstring" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">analyze_url</span><span class="p">(</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">extract_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">follow_redirects</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="n">custom_prompts</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnalysisResult</span><span class="p">:</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Analyze a privacy policy from a URL.</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="sd">    Args:</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="sd">        url: URL of the privacy policy page</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="sd">        extract_method: Method for extracting content</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="sd">        timeout: Override default timeout for this request</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="sd">        follow_redirects: Whether to follow redirects</span>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="sd">        custom_prompts: Custom prompts for analysis</span>
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="sd">        AnalysisResult object with analysis results</span>
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>
-<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="sd">    Raises:</span>
-<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="sd">        ExtractionError: If content extraction fails</span>
-<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="sd">        AnalysisError: If analysis fails</span>
-<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="sd">        NetworkError: If network request fails</span>
-<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="sd">    &quot;&quot;&quot;</span>
+<h3 id="example-docstring-for-an-existing-function">Example Docstring (for an existing function)<a class="headerlink" href="#example-docstring-for-an-existing-function" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">resolve_privacy_url</span><span class="p">(</span><span class="n">input_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve a likely privacy policy URL starting from any given page.</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="sd">    The function checks common policy paths, verifies candidates with a lightweight</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="sd">    content probe, inspects robots.txt and sitemaps, and finally scans in-page links</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="sd">    for privacy-related anchors.</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="sd">    Args:</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="sd">        input_url: A site page or a direct policy URL.</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="sd">        A tuple (resolved_url, original_input_if_discovery_used).</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="sd">        If discovery is skipped or unnecessary, the second item may be None.</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>    <span class="o">...</span>
 </code></pre></div>
 <h3 id="documentation-updates">Documentation Updates<a class="headerlink" href="#documentation-updates" title="Permanent link">&para;</a></h3>
-<p>When adding features or changing APIs:</p>
+<p>When adding features or changing behavior:</p>
 <ol>
 <li><strong>Update Docstrings</strong>: Update relevant docstrings</li>
 <li><strong>Update README</strong>: Update README if needed</li>
 <li><strong>Update User Guide</strong>: Update user guide for new features</li>
-<li><strong>Update API Docs</strong>: Update API documentation</li>
+<li><strong>Update API Docs</strong>: Update CLI reference as needed</li>
 <li><strong>Add Examples</strong>: Add usage examples</li>
 </ol>
 <h2 id="submitting-changes">🔄 Submitting Changes<a class="headerlink" href="#submitting-changes" title="Permanent link">&para;</a></h2>
@@ -1727,7 +1735,7 @@ provides guidelines and information for contributors.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2025 15:58:12 UTC">September 7, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 8, 2025 20:41:14 UTC">September 8, 2025</span>
   </span>
 
     

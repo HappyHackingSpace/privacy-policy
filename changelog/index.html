@@ -607,30 +607,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#010-2024-01-xx" class="md-nav__link">
-    <span class="md-ellipsis">
-      [0.1.0] - 2024-01-XX
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="[0.1.0] - 2024-01-XX">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#added_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Added
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#legend" class="md-nav__link">
     <span class="md-ellipsis">
       Legend
@@ -751,30 +727,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#010-2024-01-xx" class="md-nav__link">
-    <span class="md-ellipsis">
-      [0.1.0] - 2024-01-XX
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="[0.1.0] - 2024-01-XX">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#added_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Added
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#legend" class="md-nav__link">
     <span class="md-ellipsis">
       Legend
@@ -822,24 +774,18 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <h2 id="unreleased">[Unreleased]<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Complete project restructure with modern Python packaging</li>
-<li>Enhanced privacy policy analysis functionality</li>
-<li>Web content extraction using trafilatura and BeautifulSoup</li>
-<li>AI-powered analysis using OpenAI GPT models</li>
-<li>Comprehensive scoring system across multiple dimensions</li>
-<li>Caching system for improved performance</li>
-<li>Batch processing capabilities</li>
-<li>Export functionality (JSON, CSV, HTML)</li>
-<li>Command-line interface using cliff</li>
+<li>Auto-discovery of likely privacy policy URLs (common paths, robots/sitemaps, in-page links)</li>
+<li>Web content extraction via requests + BeautifulSoup; optional Trafilatura; Selenium fallback for dynamic pages</li>
+<li>OpenAI-powered analysis (Chat Completions) with a fixed JSON scoring schema</li>
+<li>Weighted scoring across ten dimensions aggregated to a 0–100 overall score</li>
+<li>CLI (argparse) with <code>summary</code>, <code>detailed</code>, and <code>full</code> report modes</li>
+<li>Tunable chunking (<code>--chunk-size</code>, <code>--chunk-overlap</code>, <code>--max-chunks</code>) and fetch strategy (<code>--fetch auto|http|selenium</code>)</li>
 <li>Comprehensive documentation with MkDocs and Material theme</li>
-<li>Pre-commit hooks for code quality and documentation</li>
-<li>Testing framework with pytest</li>
-<li>Type checking with mypy</li>
-<li>Code formatting with Black and isort</li>
-<li>Linting with ruff</li>
-<li>GitHub Actions CI/CD pipeline</li>
-<li>Automated release workflow</li>
-<li>Integration with Happy Hacking Space organization</li>
+<li>JSON output suitable for pipelines, dashboards, or audits</li>
+<li>Pre-commit hooks configuration</li>
+<li>CI workflows (GitHub Actions) and automated release pipeline</li>
+<li>Project metadata and tooling via <code>pyproject.toml</code></li>
+<li>Integration with the Happy Hacking Space organization</li>
 </ul>
 <h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
 <ul>
@@ -860,16 +806,6 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <h3 id="security">Security<a class="headerlink" href="#security" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Nothing yet</li>
-</ul>
-<h2 id="010-2024-01-xx">[0.1.0] - 2024-01-XX<a class="headerlink" href="#010-2024-01-xx" title="Permanent link">&para;</a></h2>
-<h3 id="added_1">Added<a class="headerlink" href="#added_1" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Initial release of Privacy Policy Analyzer</li>
-<li>Core analysis engine with OpenAI integration</li>
-<li>Web scraping capabilities</li>
-<li>Basic scoring system</li>
-<li>Documentation website</li>
-<li>Development tools and CI/CD setup</li>
 </ul>
 <hr />
 <h2 id="legend">Legend<a class="headerlink" href="#legend" title="Permanent link">&para;</a></h2>
@@ -903,7 +839,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2025 15:58:12 UTC">September 7, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 8, 2025 20:41:14 UTC">September 8, 2025</span>
   </span>
 
     
