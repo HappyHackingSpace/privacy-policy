@@ -8,24 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Complete project restructure with modern Python packaging
-- Enhanced privacy policy analysis functionality
-- Web content extraction using trafilatura and BeautifulSoup
-- AI-powered analysis using OpenAI GPT models
-- Comprehensive scoring system across multiple dimensions
-- Caching system for improved performance
-- Batch processing capabilities
-- Export functionality (JSON, CSV, HTML)
-- Command-line interface using cliff
+- Auto-discovery of likely privacy policy URLs (common paths, robots/sitemaps, in-page links)
+- Web content extraction via requests + BeautifulSoup; optional Trafilatura; Selenium fallback for dynamic pages
+- OpenAI-powered analysis (Chat Completions) with a fixed JSON scoring schema
+- Weighted scoring across ten dimensions aggregated to a 0–100 overall score
+- CLI (argparse) with `summary`, `detailed`, and `full` report modes
+- Tunable chunking (`--chunk-size`, `--chunk-overlap`, `--max-chunks`) and fetch strategy (`--fetch auto|http|selenium`)
 - Comprehensive documentation with MkDocs and Material theme
-- Pre-commit hooks for code quality and documentation
-- Testing framework with pytest
-- Type checking with mypy
-- Code formatting with Black and isort
-- Linting with ruff
-- GitHub Actions CI/CD pipeline
-- Automated release workflow
-- Integration with Happy Hacking Space organization
+- JSON output suitable for pipelines, dashboards, or audits
+- Pre-commit hooks configuration
+- CI workflows (GitHub Actions) and automated release pipeline
+- Project metadata and tooling via `pyproject.toml`
+- Integration with the Happy Hacking Space organization
 
 ### Changed
 - Nothing yet
@@ -41,16 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 - Nothing yet
-
-## [0.1.0] - 2024-01-XX
-
-### Added
-- Initial release of Privacy Policy Analyzer
-- Core analysis engine with OpenAI integration
-- Web scraping capabilities
-- Basic scoring system
-- Documentation website
-- Development tools and CI/CD setup
 
 ---
 

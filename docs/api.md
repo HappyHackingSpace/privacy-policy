@@ -1,447 +1,154 @@
 # API Reference
 
-Complete API documentation for the Privacy Policy Analyzer.
+This project currently exposes a **command-line interface (CLI)** rather than a stable importable class-based API.  
+Use the CLI to discover, extract, and evaluate privacy policies, and consume the JSON it prints to stdout.
 
 ## 📋 Table of Contents
 
-- [PrivacyPolicyAnalyzer](#privacypolicyanalyzer)
-- [AnalysisResult](#analysisresult)
-- [WebExtractor](#webextractor)
-- [ScoringEngine](#scoringengine)
-- [Exceptions](#exceptions)
-- [Utilities](#utilities)
+- [Command](#command)
+- [Options](#options)
+- [Output Schemas](#output-schemas)
+- [Categories & Weights](#categories--weights)
+- [Environment Variables](#environment-variables)
+- [Exit Codes](#exit-codes)
+- [Examples](#examples)
 
-## PrivacyPolicyAnalyzer
+## Command
 
-The main class for analyzing privacy policies.
+```bash
+# Using uv
+uv run python src/main.py [OPTIONS]
 
-### Constructor
-
-```python
-PrivacyPolicyAnalyzer(
-    api_key: Optional[str] = None,
-    model: str = "gpt-4",
-    temperature: float = 0.1,
-    cache_dir: Optional[str] = None,
-    cache_ttl: int = 3600,
-    timeout: int = 30,
-    max_retries: int = 3,
-    include_recommendations: bool = True,
-    detailed_analysis: bool = True,
-    language: str = "en",
-    debug: bool = False
-)
+# Or module form
+python -m src.main [OPTIONS]
 ```
 
-#### Parameters
+**Required:** `--url` (site URL for auto-discovery or a direct privacy policy URL)
 
-- **api_key** (`Optional[str]`): OpenAI API key. If not provided, will look for `OPENAI_API_KEY` environment variable.
-- **model** (`str`): OpenAI model to use for analysis. Default: `"gpt-4"`.
-- **temperature** (`float`): Temperature for text generation. Default: `0.1`.
-- **cache_dir** (`Optional[str]`): Directory for caching results. Default: `None` (no caching).
-- **cache_ttl** (`int`): Cache time-to-live in seconds. Default: `3600` (1 hour).
-- **timeout** (`int`): Request timeout in seconds. Default: `30`.
-- **max_retries** (`int`): Maximum number of retries for failed requests. Default: `3`.
-- **include_recommendations** (`bool`): Whether to include recommendations in results. Default: `True`.
-- **detailed_analysis** (`bool`): Whether to perform detailed analysis. Default: `True`.
-- **language** (`str`): Language for analysis. Default: `"en"`.
-- **debug** (`bool`): Enable debug logging. Default: `False`.
+## Options
 
-### Methods
+- `--url TEXT`  
+  Input URL. If it’s a homepage or non-policy page, the tool will try to resolve a likely policy URL.
 
-#### analyze_url
+- `--model TEXT`  
+  Override the OpenAI model (defaults to `OPENAI_MODEL` or `gpt-4o`).
 
-```python
-analyze_url(
-    url: str,
-    extract_method: str = "auto",
-    timeout: Optional[int] = None,
-    follow_redirects: bool = True,
-    custom_prompts: Optional[Dict[str, str]] = None
-) -> AnalysisResult
+- `--chunk-size INT` (default: `3500`)  
+  Character-based chunk size for splitting long policies.
+
+- `--chunk-overlap INT` (default: `350`)  
+  Overlap between chunks.
+
+- `--max-chunks INT` (default: `30`)  
+  Hard cap for analyzed chunks; remaining tail chunks are merged.
+
+- `--report {summary|detailed|full}` (default: `summary`)  
+  Output verbosity level.
+
+- `--fetch {auto|http|selenium}` (default: `auto`)  
+  Extraction method. `auto` tries HTTP first and can fall back to Selenium.
+
+- `--no-discover`  
+  Analyze the given URL as-is (skip auto-discovery).
+
+## Output Schemas
+
+The CLI prints **JSON** to stdout.
+
+### `summary`
+
+```json
+{
+"status": "ok",
+"url": "https://example.com",
+"resolved_url": "https://example.com/privacy",
+"model": "gpt-4o",
+"chunks": 12,
+"valid_chunks": 11,
+"overall_score": 82.5,
+"confidence": 0.9,
+"top_strengths": [["user_rights_and_redress", 8.7], ["security_and_breach", 8.2], ["transparency_and_notice", 7.9]],
+"top_risks": [["cross_border_transfers", 5.1], ["retention_and_deletion", 6.0], ["secondary_use_and_limits", 6.2]],
+"red_flags_count": 2
+}
 ```
 
-Analyze a privacy policy from a URL.
+### `detailed`
+Adds:
+- `category_scores`: `{ [category]: { "score": number (0–10), "weight": number, "rationale": string } }`
+- `red_flags`: `string[]`
+- `recommendations`: `string[]`
 
-**Parameters:**
-- **url** (`str`): URL of the privacy policy page.
-- **extract_method** (`str`): Method for extracting content. Options: `"auto"`, `"trafilatura"`,
-  `"beautifulsoup"`. Default: `"auto"`.
-- **timeout** (`Optional[int]`): Override default timeout for this request.
-- **follow_redirects** (`bool`): Whether to follow redirects. Default: `True`.
-- **custom_prompts** (`Optional[Dict[str, str]]`): Custom prompts for analysis.
+### `full`
+Adds:
+- `chunks`: raw per-chunk model outputs (including per-chunk `scores`, `rationales`, and optional `red_flags`/`notes`)
 
-**Returns:** `AnalysisResult` object with analysis results.
+## Categories & Weights
 
-**Raises:**
-- `ExtractionError`: If content extraction fails.
-- `AnalysisError`: If analysis fails.
-- `NetworkError`: If network request fails.
+Each category is scored **0–10** per chunk by the model; scores are averaged and combined with the weights below to form the **0–100 overall score**.
 
-#### analyze_text
+- **lawful_basis_and_purpose** — weight **12**  
+  Clarity of purposes/justifications; purpose limitation; consent/choice clarity where relevant.
 
-```python
-analyze_text(
-    text: str,
-    custom_prompts: Optional[Dict[str, str]] = None,
-    metadata: Optional[Dict[str, Any]] = None
-) -> AnalysisResult
-```
+- **collection_and_minimization** — weight **10**  
+  Specificity/necessity of collected data categories; proportionality/minimization.
 
-Analyze privacy policy text directly.
+- **secondary_use_and_limits** — weight **8**  
+  Limits on additional/compatible uses; avoidance of vague blanket purposes.
 
-**Parameters:**
-- **text** (`str`): Privacy policy text to analyze.
-- **custom_prompts** (`Optional[Dict[str, str]]`): Custom prompts for analysis.
-- **metadata** (`Optional[Dict[str, Any]]`): Additional metadata for the analysis.
+- **retention_and_deletion** — weight **8**  
+  Concrete periods or clear criteria; deletion/archiving language; avoiding indefinite retention without justification.
 
-**Returns:** `AnalysisResult` object with analysis results.
+- **third_parties_and_processors** — weight **12**  
+  Processors/third parties, categories & purposes, and role clarity (controller/processor/joint).
 
-**Raises:**
-- `AnalysisError`: If analysis fails.
+- **cross_border_transfers** — weight **8**  
+  Destinations (if any) and plain-language safeguards for international transfers.
 
-#### analyze_file
+- **user_rights_and_redress** — weight **14**  
+  How rights can be exercised (access/rectification/erasure/restriction/portability/objection), timelines, contacts, escalation paths.
 
-```python
-analyze_file(
-    file_path: str,
-    encoding: str = "utf-8",
-    custom_prompts: Optional[Dict[str, str]] = None
-) -> AnalysisResult
-```
+- **security_and_breach** — weight **12**  
+  Organizational/technical measures; breach handling language; security/DPO contact if applicable.
 
-Analyze a privacy policy from a local file.
+- **transparency_and_notice** — weight **8**  
+  Plain language, structure, contact details, change/version notices, cookie/consent pointers where relevant.
 
-**Parameters:**
-- **file_path** (`str`): Path to the privacy policy file.
-- **encoding** (`str`): File encoding. Default: `"utf-8"`.
-- **custom_prompts** (`Optional[Dict[str, str]]`): Custom prompts for analysis.
+- **sensitive_children_ads_profiling** — weight **8**  
+  Handling of sensitive/special categories; children data statements/age gates; selling/sharing for ads and opt-out/limit choices; automated decisions/profiling.
 
-**Returns:** `AnalysisResult` object with analysis results.
+## Environment Variables
 
-**Raises:**
-- `FileNotFoundError`: If file doesn't exist.
-- `AnalysisError`: If analysis fails.
+- `OPENAI_API_KEY` (**required**)  
+- `OPENAI_MODEL` (optional; default model if `--model` is not set)
 
-#### analyze_batch
+## Exit Codes
 
-```python
-analyze_batch(
-    inputs: List[Union[str, Dict[str, Any]]],
-    max_concurrent: int = 5,
-    progress_callback: Optional[Callable[[int, int], None]] = None
-) -> List[AnalysisResult]
-```
-
-Analyze multiple privacy policies in batch.
-
-**Parameters:**
-- **inputs** (`List[Union[str, Dict[str, Any]]]`): List of URLs, text, or file paths to analyze.
-- **max_concurrent** (`int`): Maximum concurrent analyses. Default: `5`.
-- **progress_callback** (`Optional[Callable[[int, int], None]]`): Callback for progress updates.
-
-**Returns:** List of `AnalysisResult` objects.
-
-#### compare_results
-
-```python
-compare_results(results: List[AnalysisResult]) -> ComparisonResult
-```
-
-Compare multiple analysis results.
-
-**Parameters:**
-- **results** (`List[AnalysisResult]`): List of analysis results to compare.
-
-**Returns:** `ComparisonResult` object with comparison data.
-
-#### clear_cache
-
-```python
-clear_cache() -> None
-```
-
-Clear the analysis cache.
-
-## AnalysisResult
-
-Represents the result of a privacy policy analysis.
-
-### Properties
-
-- **overall_score** (`float`): Overall privacy score (0-100).
-- **dimension_scores** (`Dict[str, float]`): Scores for each dimension.
-- **confidence** (`float`): Analysis confidence (0-100).
-- **findings** (`List[str]`): Key findings from the analysis.
-- **recommendations** (`List[str]`): Recommendations for improvement.
-- **raw_content** (`str`): Raw extracted content.
-- **analysis_time** (`float`): Time taken for analysis in seconds.
-- **metadata** (`Dict[str, Any]`): Additional metadata.
-- **custom_scores** (`Dict[str, float]`): Custom analysis scores.
-
-### Methods
-
-#### export_json
-
-```python
-export_json(file_path: str) -> None
-```
-
-Export results to JSON file.
-
-#### export_csv
-
-```python
-export_csv(file_path: str) -> None
-```
-
-Export results to CSV file.
-
-#### export_html
-
-```python
-export_html(file_path: str, template: Optional[str] = None) -> None
-```
-
-Export results to HTML report.
-
-## WebExtractor
-
-Utility class for extracting content from web pages.
-
-### Constructor
-
-```python
-WebExtractor(
-    timeout: int = 30,
-    max_retries: int = 3,
-    user_agent: str = "PrivacyPolicyAnalyzer/1.0"
-)
-```
-
-### Methods
-
-#### extract
-
-```python
-extract(
-    url: str,
-    method: str = "auto",
-    follow_redirects: bool = True
-) -> str
-```
-
-Extract content from a URL.
-
-**Parameters:**
-- **url** (`str`): URL to extract content from.
-- **method** (`str`): Extraction method. Options: `"auto"`, `"trafilatura"`, `"beautifulsoup"`.
-- **follow_redirects** (`bool`): Whether to follow redirects.
-
-**Returns:** Extracted text content.
-
-**Raises:**
-- `ExtractionError`: If extraction fails.
-
-## ScoringEngine
-
-Engine for scoring privacy policies.
-
-### Constructor
-
-```python
-ScoringEngine(
-    model: str = "gpt-4",
-    temperature: float = 0.1,
-    custom_prompts: Optional[Dict[str, str]] = None
-)
-```
-
-### Methods
-
-#### score_policy
-
-```python
-score_policy(
-    content: str,
-    dimensions: Optional[List[str]] = None
-) -> Dict[str, float]
-```
-
-Score a privacy policy across different dimensions.
-
-**Parameters:**
-- **content** (`str`): Privacy policy content.
-- **dimensions** (`Optional[List[str]]`): List of dimensions to score.
-
-**Returns:** Dictionary mapping dimensions to scores.
-
-## Exceptions
-
-### PrivacyPolicyError
-
-Base exception for all privacy policy analyzer errors.
-
-```python
-class PrivacyPolicyError(Exception):
-    pass
-```
-
-### ExtractionError
-
-Raised when content extraction fails.
-
-```python
-class ExtractionError(PrivacyPolicyError):
-    def __init__(self, message: str, url: Optional[str] = None):
-        self.url = url
-        super().__init__(message)
-```
-
-### AnalysisError
-
-Raised when analysis fails.
-
-```python
-class AnalysisError(PrivacyPolicyError):
-    def __init__(self, message: str, content: Optional[str] = None):
-        self.content = content
-        super().__init__(message)
-```
-
-### NetworkError
-
-Raised when network requests fail.
-
-```python
-class NetworkError(PrivacyPolicyError):
-    def __init__(self, message: str, url: Optional[str] = None, status_code: Optional[int] = None):
-        self.url = url
-        self.status_code = status_code
-        super().__init__(message)
-```
-
-## Utilities
-
-### Configuration
-
-```python
-from privacy_policy.config import Config
-
-# Load configuration from environment
-config = Config.from_env()
-
-# Load configuration from file
-config = Config.from_file("config.yaml")
-
-# Create configuration programmatically
-config = Config(
-    api_key="your-key",
-    model="gpt-4",
-    timeout=30
-)
-```
-
-### Logging
-
-```python
-from privacy_policy.logging import setup_logging
-
-# Setup logging
-setup_logging(level="INFO", log_file="analyzer.log")
-
-# Use logger
-import logging
-logger = logging.getLogger("privacy_policy")
-logger.info("Analysis started")
-```
-
-### Caching
-
-```python
-from privacy_policy.cache import Cache
-
-# Create cache
-cache = Cache(cache_dir="./cache", ttl=3600)
-
-# Store result
-cache.store("key", result)
-
-# Retrieve result
-result = cache.retrieve("key")
-
-# Clear cache
-cache.clear()
-```
+- `0`: success (JSON printed)  
+- non-zero: error (a JSON error payload is printed where possible)
 
 ## Examples
 
-### Basic Usage
+Analyze a homepage (auto-discovery):
 
-```python
-from privacy_policy import PrivacyPolicyAnalyzer
-
-# Initialize analyzer
-analyzer = PrivacyPolicyAnalyzer(api_key="your-key")
-
-# Analyze URL
-result = analyzer.analyze_url("https://example.com/privacy")
-
-# Access results
-print(f"Score: {result.overall_score}")
-print(f"Findings: {result.findings}")
+```bash
+uv run python src/main.py --url https://example.com
 ```
 
-### Custom Analysis
+Analyze a known policy URL directly:
 
-```python
-# Custom prompts
-custom_prompts = {
-    "data_collection": "Focus on data collection practices",
-    "user_rights": "Analyze user rights and controls"
-}
-
-# Analyze with custom prompts
-result = analyzer.analyze_text(
-    policy_text,
-    custom_prompts=custom_prompts
-)
-
-# Access custom scores
-print(f"Data Collection Score: {result.custom_scores['data_collection']}")
+```bash
+uv run python src/main.py --url https://example.com/privacy-policy --no-discover --report detailed
 ```
 
-### Batch Processing
+Force Selenium for a client-rendered page:
 
-```python
-# Analyze multiple policies
-urls = [
-    "https://company1.com/privacy",
-    "https://company2.com/privacy"
-]
-
-results = analyzer.analyze_batch(urls)
-
-# Compare results
-comparison = analyzer.compare_results(results)
-print(comparison.summary)
+```bash
+uv run python src/main.py --url https://example.com/privacy --fetch selenium
 ```
 
-### Error Handling
+Tune chunking for very long policies:
 
-```python
-from privacy_policy.exceptions import ExtractionError, AnalysisError
-
-try:
-    result = analyzer.analyze_url("https://example.com/privacy")
-except ExtractionError as e:
-    print(f"Failed to extract content: {e}")
-    print(f"URL: {e.url}")
-except AnalysisError as e:
-    print(f"Analysis failed: {e}")
-    print(f"Content length: {len(e.content) if e.content else 0}")
+```bash
+uv run python src/main.py --url https://example.com --chunk-size 3000 --chunk-overlap 300 --max-chunks 25
 ```
-
----
-
-*For more examples and advanced usage, see the [User Guide](user-guide.md).*
