@@ -8,8 +8,8 @@ import sys
 import xml.etree.ElementTree as ET
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urljoin, urlparse
-from src.analyzer.prompts import SYSTEM_SCORER, build_user_prompt
-from src.analyzer.scoring import aggregate_chunk_results
+from analyzer.prompts import SYSTEM_SCORER, build_user_prompt
+from analyzer.scoring import aggregate_chunk_results
 import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
