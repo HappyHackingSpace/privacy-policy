@@ -28,14 +28,14 @@ provides guidelines and information for contributors.
 2. Clone your fork locally:
 
 ```bash
-git clone https://github.com/your-username/privacy-policy.git
-cd privacy-policy
+git clone https://github.com/your-username/privacy-policy-analyzer.git
+cd privacy-policy-analyzer
 ```
 
 3. Add the upstream repository:
 
 ```bash
-git remote add upstream https://github.com/HappyHackingSpace/privacy-policy.git
+git remote add upstream https://github.com/HappyHackingSpace/privacy-policy-analyzer.git
 ```
 
 ## 🔧 Development Setup
@@ -360,7 +360,7 @@ Contributors will be recognized in:
 ## 📞 Contact
 
 - **Organization**: [Happy Hacking Space](https://github.com/HappyHackingSpace)
-- **Repository**: [@HappyHackingSpace/privacy-policy](https://github.com/HappyHackingSpace/privacy-policy)
+- **Repository**: [@HappyHackingSpace/privacy-policy-analyzer](https://github.com/HappyHackingSpace/privacy-policy-analyzer)
 - **Discord**: [Join our server](https://discord.gg/happyhackingspace)
 
 ---

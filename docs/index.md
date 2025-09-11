@@ -27,8 +27,8 @@ The Privacy Policy Analyzer helps you:
 
 ```bash
 # Clone the repository
-git clone https://github.com/HappyHackingSpace/privacy-policy.git
-cd privacy-policy
+git clone https://github.com/HappyHackingSpace/privacy-policy-analyzer.git
+cd privacy-policy-analyzer
 
 # Using uv (recommended)
 uv sync
@@ -86,8 +86,8 @@ This project is licensed under the MIT License - see the [LICENSE](../LICENSE) f
 
 ## 🆘 Support
 
-- **Issues**: Report bugs or request features on [GitHub Issues](https://github.com/HappyHackingSpace/privacy-policy/issues)
-- **Discussions**: Join our community discussions on [GitHub Discussions](https://github.com/HappyHackingSpace/privacy-policy/discussions)
+- **Issues**: Report bugs or request features on [GitHub Issues](https://github.com/HappyHackingSpace/privacy-policy-analyzer/issues)
+- **Discussions**: Join our community discussions on [GitHub Discussions](https://github.com/HappyHackingSpace/privacy-policy-analyzer/discussions)
 - **Discord**: Join our [Happy Hacking Space Discord](https://discord.gg/happyhackingspace)
 
 ---

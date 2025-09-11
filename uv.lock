@@ -902,7 +902,7 @@ wheels = [
 ]
 
 [[package]]
-name = "privacy-policy"
+name = "privacy-policy-analyzer"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

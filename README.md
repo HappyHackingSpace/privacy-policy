@@ -2,11 +2,11 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
-[![GitHub stars](https://img.shields.io/github/stars/HappyHackingSpace/privacy-policy.svg)](
-  https://github.com/HappyHackingSpace/privacy-policy/stargazers
+[![GitHub stars](https://img.shields.io/github/stars/HappyHackingSpace/privacy-policy-analyzer.svg)](
+  https://github.com/HappyHackingSpace/privacy-policy-analyzer/stargazers
 )
-[![GitHub forks](https://img.shields.io/github/forks/HappyHackingSpace/privacy-policy.svg)](
-  https://github.com/HappyHackingSpace/privacy-policy/network
+[![GitHub forks](https://img.shields.io/github/forks/HappyHackingSpace/privacy-policy-analyzer.svg)](
+  https://github.com/HappyHackingSpace/privacy-policy-analyzer/network
 )
 
 Analyze a website's privacy policy end-to-end: **auto-discover** the policy URL, **fetch** clean text
@@ -27,7 +27,7 @@ and **aggregate** category scores into an overall score with strengths, risks, r
 ## Project Layout
 
 ```
-privacy-policy/
+privacy-policy-analyzer/
 ├── src/
 │   ├── __init__.py
 │   ├── main.py                    # Main CLI application
@@ -65,8 +65,8 @@ privacy-policy/
 
 ```bash
 # Clone the repository
-git clone https://github.com/HappyHackingSpace/privacy-policy.git
-cd privacy-policy
+git clone https://github.com/HappyHackingSpace/privacy-policy-analyzer.git
+cd privacy-policy-analyzer
 
 # Install dependencies
 uv sync
@@ -81,8 +81,8 @@ source .venv/bin/activate  # On macOS/Linux
 
 ```bash
 # Clone the repository
-git clone https://github.com/HappyHackingSpace/privacy-policy.git
-cd privacy-policy
+git clone https://github.com/HappyHackingSpace/privacy-policy-analyzer.git
+cd privacy-policy-analyzer
 
 # Create virtual environment
 python -m venv venv
@@ -191,13 +191,13 @@ counsel for compliance-critical use cases.
 
 ## Documentation
 
-- 📖 **[Full Documentation](https://happyhackingspace.github.io/privacy-policy/)** - Complete user
+- 📖 **[Full Documentation](https://happyhackingspace.github.io/privacy-policy-analyzer/)** - Complete user
   guide and API reference
-- 🚀 **[Quick Start Guide](https://happyhackingspace.github.io/privacy-policy/user-guide/)** - Get
+- 🚀 **[Quick Start Guide](https://happyhackingspace.github.io/privacy-policy-analyzer/user-guide/)** - Get
   up and running quickly
-- 🔧 **[API Reference](https://happyhackingspace.github.io/privacy-policy/api/)** - Detailed API
+- 🔧 **[API Reference](https://happyhackingspace.github.io/privacy-policy-analyzer/api/)** - Detailed API
   documentation
-- 🤝 **[Contributing](https://happyhackingspace.github.io/privacy-policy/contributing/)** - How to
+- 🤝 **[Contributing](https://happyhackingspace.github.io/privacy-policy-analyzer/contributing/)** - How to
   contribute to the project
 
 ## About Happy Hacking Space
@@ -220,7 +220,7 @@ community-driven organization focused on:
 ## Contributing
 
 We welcome contributions! Please see our
-[Contributing Guide](https://happyhackingspace.github.io/privacy-policy/contributing/) for details.
+[Contributing Guide](https://happyhackingspace.github.io/privacy-policy-analyzer/contributing/) for details.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -230,8 +230,8 @@ We welcome contributions! Please see our
 
 ## Support
 
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/HappyHackingSpace/privacy-policy/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/HappyHackingSpace/privacy-policy/discussions)
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/HappyHackingSpace/privacy-policy-analyzer/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/HappyHackingSpace/privacy-policy-analyzer/discussions)
 - 📧 **Contact**: [Happy Hacking Space](https://github.com/HappyHackingSpace)
 
 ## License

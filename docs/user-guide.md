@@ -26,8 +26,8 @@ This guide explains how to install, run, and interpret results from **Privacy Po
 ### Using uv (recommended)
 
 ```bash
-git clone https://github.com/HappyHackingSpace/privacy-policy.git
-cd privacy-policy
+git clone https://github.com/HappyHackingSpace/privacy-policy-analyzer.git
+cd privacy-policy-analyzer
 uv sync
 # optional: activate .venv if you prefer a shell-activated workflow
 # macOS/Linux: source .venv/bin/activate
@@ -37,8 +37,8 @@ uv sync
 ### Using Poetry
 
 ```bash
-git clone https://github.com/HappyHackingSpace/privacy-policy.git
-cd privacy-policy
+git clone https://github.com/HappyHackingSpace/privacy-policy-analyzer.git
+cd privacy-policy-analyzer
 poetry install
 # run commands with: poetry run <command>
 ```
@@ -46,8 +46,8 @@ poetry install
 ### Using pip
 
 ```bash
-git clone https://github.com/HappyHackingSpace/privacy-policy.git
-cd privacy-policy
+git clone https://github.com/HappyHackingSpace/privacy-policy-analyzer.git
+cd privacy-policy-analyzer
 python -m venv .venv
 # macOS/Linux:
 source .venv/bin/activate
@@ -225,8 +225,8 @@ uv run python src/main.py --url https://example.com --chunk-size 3000 --chunk-ov
 ## 🆘 Getting Help
 
 - **Documentation**: Check the [API Reference](api.md) for detailed API documentation
-- **Issues**: Report bugs on [GitHub Issues](https://github.com/HappyHackingSpace/privacy-policy/issues)
-- **Discussions**: Join community discussions on [GitHub Discussions](https://github.com/HappyHackingSpace/privacy-policy/discussions)
+- **Issues**: Report bugs on [GitHub Issues](https://github.com/HappyHackingSpace/privacy-policy-analyzer/issues)
+- **Discussions**: Join community discussions on [GitHub Discussions](https://github.com/HappyHackingSpace/privacy-policy-analyzer/discussions)
 - **Discord**: Join our [Happy Hacking Space Discord](https://discord.gg/happyhackingspace)
 
 ---

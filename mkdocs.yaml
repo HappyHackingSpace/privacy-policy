@@ -1,10 +1,10 @@
 site_name: Privacy Policy Analyzer
 site_description: A tool for analyzing privacy policies using AI
 site_author: Happy Hacking Space
-site_url: https://happyhackingspace.github.io/privacy-policy
+site_url: https://happyhackingspace.github.io/privacy-policy-analyzer
 
-repo_name: HappyHackingSpace/privacy-policy
-repo_url: https://github.com/HappyHackingSpace/privacy-policy
+repo_name: HappyHackingSpace/privacy-policy-analyzer
+repo_url: https://github.com/HappyHackingSpace/privacy-policy-analyzer
 edit_uri: edit/main/docs/
 
 theme:
@@ -70,9 +70,9 @@ nav:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/HappyHackingSpace/privacy-policy
+      link: https://github.com/HappyHackingSpace/privacy-policy-analyzer
     - icon: fontawesome/brands/python
-      link: https://pypi.org/project/privacy-policy/
+      link: https://pypi.org/project/privacy-policy-analyzer/
     - icon: fontawesome/brands/discord
       link: https://discord.gg/happyhackingspace
 
